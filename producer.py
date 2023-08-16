@@ -15,9 +15,14 @@ producer = KafkaProducer(bootstrap_servers=['127.0.0.1:9092'], value_serializer=
 
 if __name__ == '__main__':
     i = 0
-    while i < 30:
+    while i < 10:
         user = get_user_data()
         print(user)
-        producer.send('user_topic', user)
-        time.sleep(10)
-        i += 1
+        try:
+            producer.send('user_topic', user)
+            time.sleep(2)
+            i += 1
+        except (ValueError, Exception):
+            print(f"Something gets wrong with {user}")
+
+producer.close()
